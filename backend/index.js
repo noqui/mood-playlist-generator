@@ -11,6 +11,17 @@ app.use(express.json());
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
+// ✅ Root route
+app.get("/", (req, res) => {
+  res.send("Welcome to Moodify Backend 🎶");
+});
+
+// ✅ Test route
+app.get("/api/test", (req, res) => {
+  res.json({ message: "Backend is running successfully!" });
+});
+
+// ✅ Playlist route
 app.get("/playlist", async (req, res) => {
   try {
     const { mood } = req.query;
@@ -19,7 +30,10 @@ app.get("/playlist", async (req, res) => {
       model: "gpt-4o-mini",
       messages: [
         { role: "system", content: "You are a music assistant. Suggest songs based on mood." },
-        { role: "user", content: `Suggest 5 songs for this mood: ${mood}. Reply in JSON with fields: title, artist.` }
+        {
+          role: "user",
+          content: `Suggest 5 songs for this mood: ${mood}. Reply in JSON with fields: title, artist.`
+        }
       ]
     });
 
@@ -29,7 +43,13 @@ app.get("/playlist", async (req, res) => {
     for (const song of songList) {
       const query = `${song.title} ${song.artist}`;
       const yt = await axios.get("https://www.googleapis.com/youtube/v3/search", {
-        params: { part: "snippet", q: query, key: process.env.YOUTUBE_API_KEY, maxResults: 1, type: "video" }
+        params: {
+          part: "snippet",
+          q: query,
+          key: process.env.YOUTUBE_API_KEY,
+          maxResults: 1,
+          type: "video"
+        }
       });
 
       const video = yt.data.items[0];
@@ -48,6 +68,8 @@ app.get("/playlist", async (req, res) => {
   }
 });
 
-app.listen(process.env.PORT || 5000, () => {
-  console.log("Server running on port", process.env.PORT || 5000);
+// ✅ Start server
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+  console.log("Server running on port", PORT);
 });
