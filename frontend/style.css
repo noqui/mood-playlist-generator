@@ -1,0 +1,10 @@
+body {
+  font-family: Arial, sans-serif;
+  background: #fafafa;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+.container { text-align: center; width: 400px; }
+#results { margin-top: 20px; }
