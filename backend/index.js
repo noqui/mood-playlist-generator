@@ -109,6 +109,23 @@ app.get("/playlist", async (req, res) => {
   }
 });
 
+// Temporary test route: check if OpenAI responds at all
+app.get("/ping-openai", async (req, res) => {
+  try {
+    const resp = await openai.chat.completions.create({
+      model: "gpt-4o-mini",
+      messages: [{ role: "user", content: "Say hello world" }]
+    });
+    res.json({ raw: resp.choices[0].message.content });
+  } catch (err) {
+    console.error("Ping OpenAI error:", err.response?.data || err.message);
+    res.status(500).json({
+      error: "Ping failed",
+      details: err.response?.data || err.message
+    });
+  }
+});
+
 // Start server
 app.listen(process.env.PORT || 5000, () => {
   console.log("✅ Server running on port", process.env.PORT || 5000);
