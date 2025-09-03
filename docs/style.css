@@ -61,8 +61,8 @@ html, body {
     left: 50%;
     transform: translate(-50%, -50%);
     background-color: white;
+    border-radius: 12;
     padding: 1.2rem 2.8rem;
-    border-radius: 8px;
     z-index: 10; /* Stays on top of mood boxes */
     pointer-events: none;
     color: #333;
@@ -70,8 +70,8 @@ html, body {
 
 .center-prompt h2 {
     margin: 0;
-    font-size: 1.5rem;
-    font-weight: 500;
+    font-size: 1.3rem;
+    font-weight: 600;
     text-transform: uppercase;
     white-space: nowrap;
     /* --- SHADOW REMOVED HERE --- */
