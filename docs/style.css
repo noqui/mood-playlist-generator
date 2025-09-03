@@ -5,7 +5,7 @@ html, body {
     width: 100%;
     height: 100%;
     overflow: hidden; /* Prevent any scrolling */
-    font-family: 'titling-gothic-fb-wide', sans-serif;
+    font-family: 'Quicksand', sans-serif;
 }
 
 /* KEY CHANGE: Make the container a fixed layer that covers the entire viewport */
@@ -32,7 +32,7 @@ html, body {
     justify-content: center;
     align-items: center;
     font-size: 1.5rem;
-    font-weight: 300;
+    font-weight: 500;
     text-transform: uppercase;
     cursor: pointer;
     transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), filter 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
@@ -44,7 +44,7 @@ html, body {
 .mood-box:hover {
     transform: scale(1.05);
     z-index: 2; /* Ensure hovered box comes above its siblings */
-    filter: brightness(1);
+    filter: brightness(1.0);
 }
 
 /* Mood Box Colors */
