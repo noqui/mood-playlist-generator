@@ -55,7 +55,7 @@ async function generatePlaylist() {
               src="${song.albumArt}" 
               alt="${song.title}" 
               width="200" 
-              style="border-radius:12px; box-shadow:0 4px 8px rgba(0,0,0,0.2)" />
+              style="border-radius:12px;" />
           </a>`;
         playlistContent.appendChild(div);
       });
