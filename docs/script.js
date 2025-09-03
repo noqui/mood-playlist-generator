@@ -12,13 +12,13 @@ async function generatePlaylist() {
       const div = document.createElement("div");
       div.innerHTML = `
         <h3>${song.title} - ${song.artist}</h3>
-        <iframe 
-          width="300" 
-          height="200" 
-          src="https://www.youtube.com/embed/${song.youtubeId}" 
-          frameborder="0" 
-          allowfullscreen>
-        </iframe>`;
+        <a href="${song.url}" target="_blank">
+          <img 
+            src="${song.albumArt}" 
+            alt="${song.title}" 
+            width="200" 
+            style="border-radius:12px; box-shadow:0 4px 8px rgba(0,0,0,0.2)" />
+        </a>`;
       resultsDiv.appendChild(div);
     });
   } else {
