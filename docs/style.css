@@ -61,7 +61,6 @@ html, body {
     left: 50%;
     transform: translate(-50%, -50%);
     background-color: white;
-    border-radius: 12;
     padding: 1.2rem 2.8rem;
     z-index: 10; /* Stays on top of mood boxes */
     pointer-events: none;
