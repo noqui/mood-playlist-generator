@@ -31,7 +31,6 @@ html, body {
     display: flex;
     justify-content: center;
     align-items: center;
-    color: white;
     font-size: 1.5rem;
     font-weight: 300;
     text-transform: uppercase;
@@ -49,10 +48,10 @@ html, body {
 }
 
 /* Mood Box Colors */
-#upbeat { background-color: #F6A686; }
-#energetic { background-color: #00796B; }
-#downbeat { background-color: #6D597A; }
-#mellow { background-color: #B2A5D1; }
+#upbeat { background-color: #FFF916; color: #D9006A; }
+#energetic { background-color: #FF4E2A; color: #290740; }
+#downbeat { background-color: #3144B7; color: #9CF0E1; }
+#mellow { background-color: #8BF677; color: #7F14FF; }
 
 
 /* Center prompt stays on top of the grid */
