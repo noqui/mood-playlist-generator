@@ -27,6 +27,7 @@ html, body {
     gap: 0; /* Ensure no gap */
 }
 
+/* --- ANIMATION UPDATE --- */
 .mood-box {
     display: flex;
     justify-content: center;
@@ -35,13 +36,18 @@ html, body {
     font-size: 2rem;
     font-weight: 600;
     cursor: pointer;
-    transition: transform 0.2s ease;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    /* 1. Add filter to the transition and use a smoother easing curve */
+    transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), filter 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+    filter: brightness(1); /* Set initial brightness for smooth transition */
+    /* 2. Text shadow has been removed */
 }
 
+/* --- HOVER UPDATE --- */
 .mood-box:hover {
     transform: scale(1.05);
     z-index: 2; /* Ensure hovered box comes above its siblings */
+    /* 3. Add a brightness filter to darken the color on hover */
+    filter: brightness(0.9);
 }
 
 /* Mood Box Colors */
