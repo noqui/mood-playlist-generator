@@ -44,7 +44,7 @@ html, body {
 .mood-box:hover {
     transform: scale(1.05);
     z-index: 2; /* Ensure hovered box comes above its siblings */
-    filter: brightness(1.4);
+    filter: brightness(1);
 }
 
 /* Mood Box Colors */
