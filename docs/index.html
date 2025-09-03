@@ -1,16 +1,43 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Moodify</title>
-  <link rel="stylesheet" href="style.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moodify 🎵</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="container">
-    <h1>Moodify 🎵</h1>
-    <input id="moodInput" type="text" placeholder="Describe your mood..." />
-    <button onclick="generatePlaylist()">Generate Playlist</button>
+
+    <main class="mood-container">
+        <div class="center-prompt">
+            <h2>What is your mood?</h2>
+        </div>
+
+        <div class="mood-grid">
+            <div class="mood-box" id="upbeat" onclick="selectMood('Upbeat')">
+                <span>Upbeat</span>
+            </div>
+            <div class="mood-box" id="energetic" onclick="selectMood('Energetic')">
+                <span>Energetic</span>
+            </div>
+            <div class="mood-box" id="downbeat" onclick="selectMood('Downbeat')">
+                <span>Downbeat</span>
+            </div>
+            <div class="mood-box" id="mellow" onclick="selectMood('Mellow')">
+                <span>Mellow</span>
+            </div>
+        </div>
+    </main>
+
+    <input type="hidden" id="moodInput" />
+
     <div id="results"></div>
-  </div>
-  <script src="script.js"></script>
+
+    <script src="script.js"></script>
 </body>
 </html>
