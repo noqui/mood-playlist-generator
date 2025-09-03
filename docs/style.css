@@ -1,105 +1,117 @@
-/* General Body Styles */
-body {
-    font-family: 'Poppins', sans-serif;
+/* Reset browser defaults and set a full-screen context */
+html, body {
     margin: 0;
     padding: 0;
-    overflow: hidden; /* Prevent scrollbars from appearing */
-    display: flex;
-    flex-direction: column;
-    height: 100vh; /* Make body take full viewport height */
-    width: 100vw; /* Make body take full viewport width */
-    color: #fff; /* Default text color for mood boxes */
-}
-
-/* Main Container for the Mood Grid */
-.mood-container {
-    position: relative;
     width: 100%;
     height: 100%;
-    display: flex; /* Use flex to align the grid */
-    flex-grow: 1; /* Allow container to grow and fill available space */
+    overflow: hidden; /* Prevent any scrolling */
+    font-family: 'Poppins', sans-serif;
 }
 
-/* The 2x2 Grid Layout */
+/* KEY CHANGE: Make the container a fixed layer that covers the entire viewport */
+.mood-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 1; /* Set a base z-index */
+}
+
 .mood-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 1fr 1fr;
     width: 100%;
     height: 100%;
-    /* No 'gap' for full-width/height */
+    gap: 0; /* Ensure no gap */
 }
 
-/* Individual Mood Boxes */
 .mood-box {
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 2.5vw; /* Responsive font size */
+    color: white;
+    font-size: 2rem;
     font-weight: 600;
     cursor: pointer;
-    transition: transform 0.2s ease-in-out;
+    transition: transform 0.2s ease;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .mood-box:hover {
-    transform: scale(1.05); /* Slightly larger scale on hover */
-    /* No box-shadow for a flatter look, consistent with your image 2 */
-    z-index: 1; /* Ensure hovered box is above its peers, but below center-prompt */
+    transform: scale(1.05);
+    z-index: 2; /* Ensure hovered box comes above its siblings */
 }
 
 /* Mood Box Colors */
-#upbeat { background-color: #F6A686; } /* Soft Coral */
-#energetic { background-color: #00796B; } /* Deep Teal */
-#downbeat { background-color: #6D597A; } /* Muted Plum */
-#mellow { background-color: #B2A5D1; } /* Dusty Lavender */
+#upbeat { background-color: #F6A686; }
+#energetic { background-color: #00796B; }
+#downbeat { background-color: #6D597A; }
+#mellow { background-color: #B2A5D1; }
 
 
-/* Central Prompt Box */
+/* Center prompt stays on top of the grid */
 .center-prompt {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     background-color: white;
-    padding: 1.2rem 2.8rem; /* Adjusted padding */
-    border-radius: 8px; /* Slightly less rounded corners */
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Softer shadow */
-    z-index: 10; /* Keep it on top */
-    pointer-events: none; /* Allows clicks to pass through to boxes */
-    text-align: center;
-    color: #333; /* Darker text for contrast on white background */
+    padding: 1.2rem 2.8rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    z-index: 10; /* Stays on top of mood boxes */
+    pointer-events: none;
+    color: #333;
 }
 
 .center-prompt h2 {
     margin: 0;
     font-weight: 600;
-    font-size: 1.5vw; /* Responsive font size */
-    white-space: nowrap; /* Prevent text from wrapping if box is too small */
+    white-space: nowrap;
 }
 
-/* Playlist Results Styling */
+/* KEY CHANGE: Style the results as a hidden overlay */
 #results {
+    position: fixed;
+    top: 0;
+    left: 0;
     width: 100%;
-    max-width: 800px;
-    margin: 40px auto; /* Centered with top/bottom margin */
-    padding: 20px;
-    text-align: center;
+    height: 100%;
+    background: rgba(20, 20, 20, 0.9); /* Dark, semi-transparent background */
+    backdrop-filter: blur(8px);
+    color: #fff;
+    z-index: 20; /* Sits on top of everything else */
+    display: none; /* Initially hidden */
+    justify-content: center;
+    align-items: center;
+    overflow-y: auto; /* Allow scrolling for many results */
+    box-sizing: border-box;
+    padding: 60px 20px 20px 20px; /* Padding for content */
+}
+
+/* This is the container for the actual playlist songs */
+#playlist-content {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 20px;
-    background-color: #fff;
-    border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    color: #333; /* Darker text for results */
+    gap: 25px;
+    text-align: center;
+    width: 100%;
+    max-width: 1200px;
 }
 
-#results p {
-    font-size: 1.1rem;
-    color: #666;
-}
-
-#results div {
-    margin-bottom: 0; /* Remove extra margin */
+/* Style for the new close button */
+#close-results {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 2.5rem;
+    font-weight: 300;
+    cursor: pointer;
+    line-height: 1;
 }
