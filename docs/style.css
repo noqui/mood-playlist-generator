@@ -1,131 +1,243 @@
 /* Reset browser defaults and set a full-screen context */
+
 html, body {
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    height: 100%;
-    overflow: hidden; /* Prevent any scrolling */
-    font-family: 'Google Sans Flex', sans-serif;
+
+    margin: 0;
+
+    padding: 0;
+
+    width: 100%;
+
+    height: 100%;
+
+    overflow: hidden; /* Prevent any scrolling */
+
+    font-family: 'Google Sans Flex', sans-serif;
+
 }
+
+
 
 /* KEY CHANGE: Make the container a fixed layer that covers the entire viewport */
+
 .mood-container {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    z-index: 1; /* Set a base z-index */
+
+    position: fixed;
+
+    top: 0;
+
+    left: 0;
+
+    width: 100vw;
+
+    height: 100vh;
+
+    z-index: 1; /* Set a base z-index */
+
 }
+
+
 
 .mood-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: 1fr 1fr;
-    width: 100%;
-    height: 100%;
-    gap: 0; /* Ensure no gap */
+
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    grid-template-rows: 1fr 1fr;
+
+    width: 100%;
+
+    height: 100%;
+
+    gap: 0; /* Ensure no gap */
+
 }
 
-/* --- ANIMATION UPDATE --- */
+
+
 .mood-box {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 1.3rem;
-    font-weight: 500;
-    text-transform: uppercase;
-    cursor: pointer;
-    /* Adjusted duration and easing for a smoother feel */
-    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-    filter: brightness(1);
-    text-shadow: none; 
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    font-size: 1.3rem;
+
+    font-weight: 500;
+
+    text-transform: uppercase;
+
+    cursor: pointer;
+
+    transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), filter 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+
+    filter: brightness(1);
+
+    /* --- SHADOW REMOVED HERE --- */
+
+    text-shadow: none; 
+
 }
 
-/* --- HOVER UPDATE --- */
+
+
 .mood-box:hover {
-    /* Scale by 2 to make a 50% quadrant fill the 100% viewport */
-    transform: scale(2);
-    z-index: 2; /* Ensure hovered box comes above its siblings */
-    /* Removed brightness filter to focus on the scale animation */
+
+    transform: scale(1.50);
+
+    z-index: 2; /* Ensure hovered box comes above its siblings */
+
+    filter: brightness(1.5);
+
 }
+
+
 
 /* Mood Box Colors */
+
 #upbeat { background-color: #FFF916; color: #D9006A; }
+
 #energetic { background-color: #FF4E2A; color: #290740; }
+
 #downbeat { background-color: #3144B7; color: #9CF0E1; }
+
 #mellow { background-color: #8BF677; color: #7F14FF; }
 
-/* --- NEW: Set transform origins for fullscreen effect --- */
-/* This tells each box which corner to expand from */
-#upbeat { transform-origin: top left; }
-#energetic { transform-origin: top right; }
-#downbeat { transform-origin: bottom left; }
-#mellow { transform-origin: bottom right; }
+
+
 
 
 /* Center prompt stays on top of the grid */
+
 .center-prompt {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: white;
-    padding: 1.2rem 2.8rem;
-    z-index: 10; /* Stays on top of mood boxes */
-    pointer-events: none;
-    color: #333;
+
+    position: absolute;
+
+    top: 50%;
+
+    left: 50%;
+
+    transform: translate(-50%, -50%);
+
+    background-color: white;
+
+    padding: 1.2rem 2.8rem;
+
+    z-index: 10; /* Stays on top of mood boxes */
+
+    pointer-events: none;
+
+    color: #333;
+
 }
+
+
 
 .center-prompt h2 {
-    margin: 0;
-    font-size: 1.3rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    white-space: nowrap;
-    text-shadow: none;
+
+    margin: 0;
+
+    font-size: 1.3rem;
+
+    font-weight: 600;
+
+    text-transform: uppercase;
+
+    white-space: nowrap;
+
+    /* --- SHADOW REMOVED HERE --- */
+
+    text-shadow: none;
+
 }
+
+
 
 /* Style the results as a hidden overlay */
+
 #results {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(20, 20, 20, 0.9);
-    backdrop-filter: blur(8px);
-    color: #fff;
-    z-index: 20;
-    display: none;
-    justify-content: center;
-    align-items: center;
-    overflow-y: auto;
-    box-sizing: border-box;
-    padding: 60px 20px 20px 20px;
+
+    position: fixed;
+
+    top: 0;
+
+    left: 0;
+
+    width: 100%;
+
+    height: 100%;
+
+    background: rgba(20, 20, 20, 0.9);
+
+    backdrop-filter: blur(8px);
+
+    color: #fff;
+
+    z-index: 20;
+
+    display: none;
+
+    justify-content: center;
+
+    align-items: center;
+
+    overflow-y: auto;
+
+    box-sizing: border-box;
+
+    padding: 60px 20px 20px 20px;
+
 }
+
+
 
 /* This is the container for the actual playlist songs */
+
 #playlist-content {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 25px;
-    text-align: center;
-    width: 100%;
-    max-width: 1200px;
+
+    display: flex;
+
+    flex-wrap: wrap;
+
+    justify-content: center;
+
+    gap: 25px;
+
+    text-align: center;
+
+    width: 100%;
+
+    max-width: 1200px;
+
 }
 
+
+
 /* Style for the new close button */
+
 #close-results {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    background: transparent;
-    border: none;
-    color: white;
-    font-size: 2.5rem;
-    font-weight: 300;
-    cursor: pointer;
-    line-height: 1;
+
+    position: absolute;
+
+    top: 20px;
+
+    right: 20px;
+
+    background: transparent;
+
+    border: none;
+
+    color: white;
+
+    font-size: 2.5rem;
+
+    font-weight: 300;
+
+    cursor: pointer;
+
+    line-height: 1;
+
 }
