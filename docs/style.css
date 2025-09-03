@@ -27,6 +27,7 @@ html, body {
     gap: 0; /* Ensure no gap */
 }
 
+/* --- ANIMATION UPDATE --- */
 .mood-box {
     display: flex;
     justify-content: center;
@@ -35,16 +36,18 @@ html, body {
     font-weight: 500;
     text-transform: uppercase;
     cursor: pointer;
-    transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), filter 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+    /* Adjusted duration and easing for a smoother feel */
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     filter: brightness(1);
-    /* --- SHADOW REMOVED HERE --- */
     text-shadow: none; 
 }
 
+/* --- HOVER UPDATE --- */
 .mood-box:hover {
-    transform: scale(1.50);
+    /* Scale by 2 to make a 50% quadrant fill the 100% viewport */
+    transform: scale(2);
     z-index: 2; /* Ensure hovered box comes above its siblings */
-    filter: brightness(1.5);
+    /* Removed brightness filter to focus on the scale animation */
 }
 
 /* Mood Box Colors */
@@ -52,6 +55,13 @@ html, body {
 #energetic { background-color: #FF4E2A; color: #290740; }
 #downbeat { background-color: #3144B7; color: #9CF0E1; }
 #mellow { background-color: #8BF677; color: #7F14FF; }
+
+/* --- NEW: Set transform origins for fullscreen effect --- */
+/* This tells each box which corner to expand from */
+#upbeat { transform-origin: top left; }
+#energetic { transform-origin: top right; }
+#downbeat { transform-origin: bottom left; }
+#mellow { transform-origin: bottom right; }
 
 
 /* Center prompt stays on top of the grid */
@@ -73,7 +83,6 @@ html, body {
     font-weight: 600;
     text-transform: uppercase;
     white-space: nowrap;
-    /* --- SHADOW REMOVED HERE --- */
     text-shadow: none;
 }
 
