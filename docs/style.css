@@ -32,8 +32,8 @@ html, body {
     justify-content: center;
     align-items: center;
     color: white;
-    font-size: 2rem;
-    font-weight: 600;
+    font-size: 1.5rem;
+    font-weight: 300;
     cursor: pointer;
     transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), filter 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
     filter: brightness(1);
@@ -44,7 +44,7 @@ html, body {
 .mood-box:hover {
     transform: scale(1.05);
     z-index: 2; /* Ensure hovered box comes above its siblings */
-    filter: brightness(0.9);
+    filter: brightness(3);
 }
 
 /* Mood Box Colors */
