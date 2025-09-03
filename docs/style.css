@@ -42,9 +42,9 @@ html, body {
 }
 
 .mood-box:hover {
-    transform: scale(1.05);
+    transform: scale(1.50);
     z-index: 2; /* Ensure hovered box comes above its siblings */
-    filter: brightness(1.0);
+    filter: brightness(1.5);
 }
 
 /* Mood Box Colors */
