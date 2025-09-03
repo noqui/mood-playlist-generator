@@ -1,24 +1,23 @@
 /* General Body Styles */
 body {
     font-family: 'Poppins', sans-serif;
-    background-color: #f4f4f9;
     margin: 0;
-    padding: 20px;
+    padding: 0;
+    overflow: hidden; /* Prevent scrollbars from appearing */
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    color: #333;
+    height: 100vh; /* Make body take full viewport height */
+    width: 100vw; /* Make body take full viewport width */
+    color: #fff; /* Default text color for mood boxes */
 }
 
-/* Main Container for the Grid */
+/* Main Container for the Mood Grid */
 .mood-container {
     position: relative;
     width: 100%;
-    max-width: 600px;
-    aspect-ratio: 1 / 1; /* Makes the container a perfect square */
-    margin-bottom: 40px;
+    height: 100%;
+    display: flex; /* Use flex to align the grid */
+    flex-grow: 1; /* Allow container to grow and fill available space */
 }
 
 /* The 2x2 Grid Layout */
@@ -28,7 +27,7 @@ body {
     grid-template-rows: 1fr 1fr;
     width: 100%;
     height: 100%;
-    gap: 12px;
+    /* No 'gap' for full-width/height */
 }
 
 /* Individual Mood Boxes */
@@ -36,26 +35,24 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    color: white;
-    font-size: 1.8rem;
+    font-size: 2.5vw; /* Responsive font size */
     font-weight: 600;
-    border-radius: 16px;
     cursor: pointer;
-    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s ease-in-out;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .mood-box:hover {
-    transform: scale(1.03);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-    z-index: 10; /* Brings the hovered box to the front */
+    transform: scale(1.05); /* Slightly larger scale on hover */
+    /* No box-shadow for a flatter look, consistent with your image 2 */
+    z-index: 1; /* Ensure hovered box is above its peers, but below center-prompt */
 }
 
 /* Mood Box Colors */
-#upbeat { background-color: #F6A686; }
-#energetic { background-color: #00796B; }
-#downbeat { background-color: #6D597A; }
-#mellow { background-color: #B2A5D1; }
+#upbeat { background-color: #F6A686; } /* Soft Coral */
+#energetic { background-color: #00796B; } /* Deep Teal */
+#downbeat { background-color: #6D597A; } /* Muted Plum */
+#mellow { background-color: #B2A5D1; } /* Dusty Lavender */
 
 
 /* Central Prompt Box */
@@ -65,32 +62,44 @@ body {
     left: 50%;
     transform: translate(-50%, -50%);
     background-color: white;
-    padding: 1rem 2rem;
-    border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    z-index: 5;
-    pointer-events: none; /* Allows clicks to go through to the boxes underneath */
+    padding: 1.2rem 2.8rem; /* Adjusted padding */
+    border-radius: 8px; /* Slightly less rounded corners */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Softer shadow */
+    z-index: 10; /* Keep it on top */
+    pointer-events: none; /* Allows clicks to pass through to boxes */
     text-align: center;
+    color: #333; /* Darker text for contrast on white background */
 }
 
 .center-prompt h2 {
     margin: 0;
     font-weight: 600;
-    color: #333;
+    font-size: 1.5vw; /* Responsive font size */
+    white-space: nowrap; /* Prevent text from wrapping if box is too small */
 }
 
 /* Playlist Results Styling */
 #results {
     width: 100%;
     max-width: 800px;
-    margin-top: 20px;
+    margin: 40px auto; /* Centered with top/bottom margin */
+    padding: 20px;
     text-align: center;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
     gap: 20px;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    color: #333; /* Darker text for results */
+}
+
+#results p {
+    font-size: 1.1rem;
+    color: #666;
 }
 
 #results div {
-    margin-bottom: 20px;
+    margin-bottom: 0; /* Remove extra margin */
 }
