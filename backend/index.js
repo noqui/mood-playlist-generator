@@ -11,65 +11,94 @@ app.use(express.json());
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
-// ✅ Root route
-app.get("/", (req, res) => {
-  res.send("Welcome to Moodify Backend 🎶");
-});
-
-// ✅ Test route
-app.get("/api/test", (req, res) => {
-  res.json({ message: "Backend is running successfully!" });
-});
-
-// ✅ Playlist route
+// ----------------- PLAYLIST ROUTE -----------------
 app.get("/playlist", async (req, res) => {
   try {
     const { mood } = req.query;
 
+    console.log("👉 Mood received:", mood);
+    console.log("👉 OpenAI Key loaded:", !!process.env.OPENAI_API_KEY);
+    console.log("👉 YouTube Key loaded:", !!process.env.YOUTUBE_API_KEY);
+
     const aiResponse = await openai.chat.completions.create({
       model: "gpt-4o-mini",
       messages: [
-        { role: "system", content: "You are a music assistant. Suggest songs based on mood." },
+        {
+          role: "system",
+          content:
+            "You are a music assistant. Always return only valid JSON. Reply with an array of songs in this format: [{\"title\":\"Song\",\"artist\":\"Artist\"}]",
+        },
         {
           role: "user",
-          content: `Suggest 5 songs for this mood: ${mood}. Reply in JSON with fields: title, artist.`
-        }
-      ]
+          content: `Suggest 5 songs for this mood: ${mood}`,
+        },
+      ],
     });
 
-    const songList = JSON.parse(aiResponse.choices[0].message.content);
-    const results = [];
+    let raw = aiResponse.choices[0].message.content;
+    console.log("👉 Raw AI response:", raw);
 
-    for (const song of songList) {
-      const query = `${song.title} ${song.artist}`;
-      const yt = await axios.get("https://www.googleapis.com/youtube/v3/search", {
-        params: {
-          part: "snippet",
-          q: query,
-          key: process.env.YOUTUBE_API_KEY,
-          maxResults: 1,
-          type: "video"
-        }
-      });
-
-      const video = yt.data.items[0];
-      results.push({
-        title: song.title,
-        artist: song.artist,
-        youtubeId: video.id.videoId,
-        thumbnail: video.snippet.thumbnails.default.url
-      });
+    // Parse AI response safely
+    let songList;
+    try {
+      const jsonStart = raw.indexOf("[");
+      const jsonEnd = raw.lastIndexOf("]");
+      const jsonString = raw.slice(jsonStart, jsonEnd + 1);
+      songList = JSON.parse(jsonString);
+    } catch (err) {
+      console.error("❌ JSON parsing failed:", err.message);
+      return res.status(500).json({ error: "AI response was invalid JSON" });
     }
 
+    if (!Array.isArray(songList) || songList.length === 0) {
+      return res.json({ mood, playlist: [] });
+    }
+
+    const results = [];
+    for (const song of songList) {
+      try {
+        const query = `${song.title} ${song.artist}`;
+        const yt = await axios.get(
+          "https://www.googleapis.com/youtube/v3/search",
+          {
+            params: {
+              part: "snippet",
+              q: query,
+              key: process.env.YOUTUBE_API_KEY,
+              maxResults: 1,
+              type: "video",
+            },
+          }
+        );
+
+        if (yt.data.items.length > 0) {
+          const video = yt.data.items[0];
+          results.push({
+            title: song.title,
+            artist: song.artist,
+            youtubeId: video.id.videoId,
+            thumbnail: video.snippet.thumbnails.default.url,
+          });
+        }
+      } catch (ytErr) {
+        console.error("❌ YouTube search failed:", ytErr.message);
+      }
+    }
+
+    console.log("✅ Final playlist:", results);
     res.json({ mood, playlist: results });
   } catch (error) {
-    console.error(error);
+    console.error("❌ General error:", error.message);
     res.status(500).json({ error: "Failed to generate playlist" });
   }
 });
+// --------------------------------------------------
 
-// ✅ Start server
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log("Server running on port", PORT);
+// Default root
+app.get("/", (req, res) => {
+  res.send("Welcome to Moodify Backend");
+});
+
+app.listen(process.env.PORT || 5000, () => {
+  console.log("Server running on port", process.env.PORT || 5000);
 });
