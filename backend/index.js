@@ -17,7 +17,6 @@ async function getSpotifyToken() {
     return spotifyToken;
   }
   try {
-    // FINAL, CORRECT URL for Spotify Authentication
     const resp = await axios.post(
       "https://accounts.spotify.com/api/token",
       new URLSearchParams({ grant_type: "client_credentials" }),
@@ -43,7 +42,6 @@ async function getSpotifyToken() {
   }
 }
 
-// Reverted to the simpler, working Search API + shuffle logic
 app.get("/playlist", async (req, res) => {
   try {
     const { mood } = req.query;
@@ -51,7 +49,6 @@ app.get("/playlist", async (req, res) => {
 
     const token = await getSpotifyToken();
 
-    // FINAL, CORRECT URL for the Spotify Search API
     const searchResp = await axios.get(
       "https://api.spotify.com/v1",
       {
@@ -79,7 +76,6 @@ app.get("/playlist", async (req, res) => {
       albumArt: track.album.images[0]?.url,
       url: track.external_urls.spotify,
       previewUrl: track.preview_url,
-      // Genre logic has been removed to restore working state
     }));
 
     res.json({ mood, playlist: randomPlaylist });
