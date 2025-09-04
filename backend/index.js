@@ -8,34 +8,29 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// --- NEW: Mood to Spotify Genre and Audio Feature Mapping ---
+// --- UPDATED: Restructured for a cleaner API call ---
 const moodMappings = {
   upbeat: {
-    seed_genres: ["pop", "dance", "happy", "summer", "party"],
-    target_valence: 0.8, // High valence = happy, cheerful
-    target_energy: 0.7,
+    genres: ["pop", "dance", "happy", "summer", "party"],
+    features: { target_valence: 0.8, target_energy: 0.7 }
   },
   energetic: {
-    seed_genres: ["rock", "electronic", "work-out", "techno", "hard-rock"],
-    target_energy: 0.9, // High energy
-    target_danceability: 0.8,
+    genres: ["rock", "electronic", "work-out", "techno", "hard-rock"],
+    features: { target_energy: 0.9, target_danceability: 0.8 }
   },
   downbeat: {
-    seed_genres: ["sad", "acoustic", "rainy-day", "blues", "folk"],
-    target_valence: 0.2, // Low valence = sad, melancholic
-    target_energy: 0.3,
+    genres: ["sad", "acoustic", "rainy-day", "blues", "folk"],
+    features: { target_valence: 0.2, target_energy: 0.3 }
   },
   mellow: {
-    seed_genres: ["chill", "ambient", "jazz", "sleep", "r-n-b"],
-    target_energy: 0.4, // Low energy
-    target_acousticness: 0.7,
+    genres: ["chill", "ambient", "jazz", "sleep", "r-n-b"],
+    features: { target_energy: 0.4, target_acousticness: 0.7 }
   },
 };
 
 let spotifyToken = null;
 let tokenExpiry = 0;
 
-// Function: Get Spotify Access Token
 async function getSpotifyToken() {
   const now = Date.now();
   if (spotifyToken && now < tokenExpiry) {
@@ -67,7 +62,6 @@ async function getSpotifyToken() {
   }
 }
 
-// --- UPDATED: Playlist endpoint now uses Recommendations API ---
 app.get("/playlist", async (req, res) => {
   try {
     const { mood } = req.query;
@@ -83,15 +77,15 @@ app.get("/playlist", async (req, res) => {
     const token = await getSpotifyToken();
 
     // Randomly pick one genre from our list to use as a seed
-    const randomGenre = mapping.seed_genres[Math.floor(Math.random() * mapping.seed_genres.length)];
+    const randomGenre = mapping.genres[Math.floor(Math.random() * mapping.genres.length)];
 
+    // --- FIX: Correctly build the parameters object ---
     const params = {
       limit: 5,
       seed_genres: randomGenre,
-      ...mapping, // Spread the rest of the mapping properties (like target_valence)
+      ...mapping.features, // Spread only the audio features
     };
     
-    // Use the Recommendations endpoint instead of Search
     const recommendationsResp = await axios.get(
       "https://api.spotify.com/v1/search/recommendations",
       {
@@ -100,7 +94,6 @@ app.get("/playlist", async (req, res) => {
       }
     );
     
-    // The response structure is slightly different for recommendations
     const playlist = recommendationsResp.data.tracks.map((track) => ({
       title: track.name,
       artist: track.artists.map((a) => a.name).join(", "),
@@ -112,12 +105,12 @@ app.get("/playlist", async (req, res) => {
     res.json({ mood, playlist });
 
   } catch (err) {
-    console.error("Playlist error:", err.response?.data || err);
+    // Log the actual error from Spotify if it exists
+    console.error("Playlist error:", err.response?.data || err.message);
     res.status(500).json({ error: "Failed to fetch playlist" });
   }
 });
 
-// Debug route
 app.get("/debug", async (req, res) => {
   res.json({
     status: "ok",
@@ -127,6 +120,6 @@ app.get("/debug", async (req, res) => {
   });
 });
 
-app.listen(process.env.PORT || 5001, () => {
+app.listen(process.env.PORT || 5000, () => {
   console.log("Server running on port", process.env.PORT || 5000);
 });
