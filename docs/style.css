@@ -119,8 +119,6 @@ html, body {
     z-index: 10;
     pointer-events: none;
     color: #333;
-    /* --- NEW: Purple glow effect --- */
-    box-shadow: 0 0 15px 4px #8A2BE2, 0 0 25px 8px #4B0082;
 }
 
 
