@@ -8,24 +8,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const moodMappings = {
-  upbeat: {
-    genres: ["pop", "dance", "happy", "summer", "party"],
-    features: { target_valence: 0.8, target_energy: 0.7 }
-  },
-  energetic: {
-    genres: ["rock", "electronic", "work-out", "techno", "hard-rock"],
-    features: { target_energy: 0.9, target_danceability: 0.8 }
-  },
-  downbeat: {
-    genres: ["sad", "acoustic", "rainy-day", "blues", "folk"],
-    features: { target_valence: 0.2, target_energy: 0.3 }
-  },
-  mellow: {
-    genres: ["chill", "ambient", "jazz", "sleep", "r-n-b"],
-    features: { target_energy: 0.4, target_acousticness: 0.7 }
-  },
-};
+// NOTE: The complex moodMappings object has been removed.
 
 let spotifyToken = null;
 let tokenExpiry = 0;
@@ -61,37 +44,38 @@ async function getSpotifyToken() {
   }
 }
 
+// --- UPDATED: Reverted to Search API with Randomization ---
 app.get("/playlist", async (req, res) => {
   try {
     const { mood } = req.query;
     if (!mood) return res.status(400).json({ error: "Mood is required" });
 
-    const moodKey = mood.toLowerCase();
-    const mapping = moodMappings[moodKey];
-
-    if (!mapping) {
-      return res.status(400).json({ error: "Invalid mood provided" });
-    }
-
     const token = await getSpotifyToken();
 
-    const randomGenre = mapping.genres[Math.floor(Math.random() * mapping.genres.length)];
-
-    const params = {
-      limit: 5,
-      seed_genres: randomGenre,
-      ...mapping.features,
-    };
-    
-    const recommendationsResp = await axios.get(
-      "https://api.spotify.com/v1/recommendations",
+    // 1. Use the Search API endpoint (the one that worked before)
+    const searchResp = await axios.get(
+      "https://api.spotify.com/v1/search",
       {
         headers: { Authorization: `Bearer ${token}` },
-        params: params,
+        params: { q: mood, type: "track", limit: 50 }, // Fetch 50 tracks to create a random pool
       }
     );
     
-    const playlist = recommendationsResp.data.tracks.map((track) => ({
+    // 2. The response for Search is nested under 'items'
+    let tracks = searchResp.data.tracks.items;
+
+    if (tracks.length === 0) {
+      return res.json({ mood, playlist: [], message: "No songs found" });
+    }
+
+    // 3. Shuffle the array of 50 tracks
+    for (let i = tracks.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [tracks[i], tracks[j]] = [tracks[j], tracks[i]];
+    }
+
+    // 4. Select the first 5 tracks from the shuffled list
+    const randomPlaylist = tracks.slice(0, 5).map((track) => ({
       title: track.name,
       artist: track.artists.map((a) => a.name).join(", "),
       albumArt: track.album.images[0]?.url,
@@ -99,7 +83,7 @@ app.get("/playlist", async (req, res) => {
       previewUrl: track.preview_url,
     }));
 
-    res.json({ mood, playlist });
+    res.json({ mood, playlist: randomPlaylist });
 
   } catch (err) {
     console.error("Playlist error:", err.response?.data || err.message);
