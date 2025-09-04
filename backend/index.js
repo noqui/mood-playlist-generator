@@ -53,7 +53,6 @@ app.get("/playlist", async (req, res) => {
       "https://api.spotify.com/v1/search",
       {
         headers: { Authorization: `Bearer ${token}` },
-        // CHANGED: Added "genre:rock" to the search query
         params: { q: `${mood} genre:rock`, type: "track", limit: 50 },
       }
     );
@@ -64,22 +63,37 @@ app.get("/playlist", async (req, res) => {
       return res.json({ mood, playlist: [], message: "No songs found" });
     }
 
-    // Shuffle the array of 50 tracks
     for (let i = tracks.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [tracks[i], tracks[j]] = [tracks[j], tracks[i]];
     }
 
-    // Select the first 5 tracks from the shuffled list
-    const randomPlaylist = tracks.slice(0, 5).map((track) => ({
-      title: track.name,
-      artist: track.artists.map((a) => a.name).join(", "),
-      albumArt: track.album.images[0]?.url,
-      url: track.external_urls.spotify,
-      previewUrl: track.preview_url,
-    }));
+    const randomTracks = tracks.slice(0, 5);
 
-    res.json({ mood, playlist: randomPlaylist });
+    // NEW: Fetch genre for each of the 5 tracks by looking up the artist
+    const playlistWithGenres = await Promise.all(
+      randomTracks.map(async (track) => {
+        const artistId = track.artists[0].id;
+        const artistResp = await axios.get(
+          `http://googleusercontent.com/spotify.com/6`,
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        
+        // Use the first genre from the artist, or 'Rock' as a fallback
+        const genre = artistResp.data.genres[0] || 'Rock';
+
+        return {
+          title: track.name,
+          artist: track.artists.map((a) => a.name).join(", "),
+          albumArt: track.album.images[0]?.url,
+          url: track.external_urls.spotify,
+          previewUrl: track.preview_url,
+          genre: genre, // Add the genre to our song object
+        };
+      })
+    );
+
+    res.json({ mood, playlist: playlistWithGenres });
 
   } catch (err) {
     console.error("Playlist error:", err.response?.data || err.message);
