@@ -39,7 +39,7 @@ async function generatePlaylist() {
   
   // Set style to center the loading message vertically.
   playlistContent.style.justifyContent = 'center';
-  playlistContent.innerHTML = `<p>Finding some ${mood.toLowerCase()} tunes for you... 🎵</p>`;
+  playlistContent.innerHTML = `<p>Finding some ${mood.toLowerCase()} tunes for you...</p>`;
 
   try {
     const url = `https://moodify-backend-9a9p.onrender.com/playlist?mood=${encodeURIComponent(mood)}`;
@@ -74,7 +74,7 @@ async function generatePlaylist() {
         playlistContent.appendChild(div);
       });
     } else {
-      playlistContent.innerHTML = "<p>No songs found. Try another mood 🎶</p>";
+      playlistContent.innerHTML = "<p>No songs found. Try another mood</p>";
     }
   } catch (error) {
     console.error("Error fetching playlist:", error);
