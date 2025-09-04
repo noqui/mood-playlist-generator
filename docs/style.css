@@ -70,6 +70,7 @@ html, body {
     font-size: 1rem;
     font-weight: 400;
     text-transform: none;
+    white-space: nowrap;
     overflow: hidden;
     width: 0;
     border-right: 2px solid transparent;
@@ -118,6 +119,7 @@ html, body {
     z-index: 10;
     pointer-events: none;
     color: #333;
+    /* --- NEW: Purple glow effect --- */
     box-shadow: 0 0 25px 4px rgba(255, 255, 255, 0.2);
 }
 
@@ -144,27 +146,30 @@ html, body {
     z-index: 20;
     display: none;
     justify-content: center;
+    /* align-items changed to flex-start for better list view */
     align-items: flex-start; 
     overflow-y: auto;
     box-sizing: border-box;
     padding: 60px 20px 20px 20px;
 }
 
+/* --- UPDATE: Styling for the vertical playlist --- */
 #playlist-content {
     display: flex;
     flex-direction: column;
     gap: 15px;
     width: 100%;
     max-width: 500px;
+    /* --- THIS IS THE FIX --- */
+    /* flex-grow allows this container to fill the vertical space of its parent */
     flex-grow: 1; 
-    justify-content: flex-start; 
 }
 
 .song-item {
     display: flex;
     align-items: center;
     gap: 20px;
-    background: rgba(92, 92, 92, 0.1);
+    background: rgba(255, 255, 255, 0.1);
     padding: 10px;
     border-radius: 8px;
     width: 100%;
@@ -187,6 +192,7 @@ html, body {
     font-size: 0.9rem;
     opacity: 0.8;
 }
+
 
 /* --- UPDATE: Styles for new buttons --- */
 .results-controls {
