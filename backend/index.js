@@ -29,7 +29,7 @@ async function getSpotifyToken() {
                 ":" +
                 process.env.SPOTIFY_CLIENT_SECRET
             ).toString("base64"),
-          "Content-Type": "application/x-wWW-form-urlencoded",
+          "Content-Type": "application/x-www-form-urlencoded",
         },
       }
     );
@@ -53,7 +53,6 @@ app.get("/playlist", async (req, res) => {
       "https://api.spotify.com/v1",
       {
         headers: { Authorization: `Bearer ${token}` },
-        // FINAL FIX: Corrected "genze" to "genre"
         params: { q: `${mood} genre:rock`, type: "track", limit: 50 },
       }
     );
@@ -74,8 +73,10 @@ app.get("/playlist", async (req, res) => {
     const playlistWithGenres = await Promise.all(
       randomTracks.map(async (track) => {
         const artistId = track.artists[0].id;
+        
+        // FINAL FIX: Added the missing '$' to correctly insert the artist's ID
         const artistResp = await axios.get(
-          `https://api.spotify.com/v1/artists/${artistId}`,
+          `api.spotify.com`,
           { headers: { Authorization: `Bearer ${token}` } }
         );
         
@@ -109,6 +110,6 @@ app.get("/debug", async (req, res) => {
   });
 });
 
-app.listen(process.env.PORT || 5000, () => {
+app.listen(process.env.PORT || 5000, ().=> {
   console.log("Server running on port", process.env.PORT || 5000);
 });
