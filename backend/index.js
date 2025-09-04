@@ -8,6 +8,8 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// NOTE: The complex moodMappings object has been removed.
+
 let spotifyToken = null;
 let tokenExpiry = 0;
 
@@ -42,6 +44,7 @@ async function getSpotifyToken() {
   }
 }
 
+// --- UPDATED: Reverted to Search API with Randomization ---
 app.get("/playlist", async (req, res) => {
   try {
     const { mood } = req.query;
@@ -49,54 +52,38 @@ app.get("/playlist", async (req, res) => {
 
     const token = await getSpotifyToken();
 
+    // 1. Use the Search API endpoint (the one that worked before)
     const searchResp = await axios.get(
-      "https://api.spotify.com/v1",
+      "https://api.spotify.com/v1/search",
       {
         headers: { Authorization: `Bearer ${token}` },
-        params: { q: mood, type: "track", limit: 50 },
+        params: { q: mood, type: "track", limit: 50 }, // Fetch 50 tracks to create a random pool
       }
     );
     
+    // 2. The response for Search is nested under 'items'
     let tracks = searchResp.data.tracks.items;
 
     if (tracks.length === 0) {
       return res.json({ mood, playlist: [], message: "No songs found" });
     }
 
+    // 3. Shuffle the array of 50 tracks
     for (let i = tracks.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [tracks[i], tracks[j]] = [tracks[j], tracks[i]];
     }
 
-    const randomTracks = tracks.slice(0, 5);
+    // 4. Select the first 5 tracks from the shuffled list
+    const randomPlaylist = tracks.slice(0, 5).map((track) => ({
+      title: track.name,
+      artist: track.artists.map((a) => a.name).join(", "),
+      albumArt: track.album.images[0]?.url,
+      url: track.external_urls.spotify,
+      previewUrl: track.preview_url,
+    }));
 
-    // NEW: Fetch genre for each of the 5 tracks by looking up the artist
-    const playlistWithGenres = await Promise.all(
-      randomTracks.map(async (track) => {
-        const artistId = track.artists[0].id; // Get the primary artist's ID
-        
-        // Make a new API call to get that artist's details
-        const artistResp = await axios.get(
-          `api.spotify.com`,
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
-        
-        // Get the first genre from the artist's profile, or provide a fallback
-        const genre = artistResp.data.genres[0] || 'General';
-
-        // Return the final, complete song object
-        return {
-          title: track.name,
-          artist: track.artists.map((a) => a.name).join(", "),
-          albumArt: track.album.images[0]?.url,
-          url: track.external_urls.spotify,
-          previewUrl: track.preview_url,
-          genre: genre, // Add the genre property
-        };
-      })
-    );
-
-    res.json({ mood, playlist: playlistWithGenres });
+    res.json({ mood, playlist: randomPlaylist });
 
   } catch (err) {
     console.error("Playlist error:", err.response?.data || err.message);
