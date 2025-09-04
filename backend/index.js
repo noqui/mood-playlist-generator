@@ -17,7 +17,6 @@ async function getSpotifyToken() {
     return spotifyToken;
   }
   try {
-    // FINAL FIX: Using the real Spotify Accounts API endpoint
     const resp = await axios.post(
       "https://accounts.spotify.com/api/token",
       new URLSearchParams({ grant_type: "client_credentials" }),
@@ -30,7 +29,7 @@ async function getSpotifyToken() {
                 ":" +
                 process.env.SPOTIFY_CLIENT_SECRET
             ).toString("base64"),
-          "Content-Type": "application/x-www-form-urlencoded",
+          "Content-Type": "application/x-wWW-form-urlencoded",
         },
       }
     );
@@ -50,11 +49,11 @@ app.get("/playlist", async (req, res) => {
 
     const token = await getSpotifyToken();
 
-    // FINAL FIX: Using the real Spotify Search API endpoint
     const searchResp = await axios.get(
-      "http://googleusercontent.com/spotify.com/7",
+      "https://api.spotify.com/v1",
       {
         headers: { Authorization: `Bearer ${token}` },
+        // FINAL FIX: Corrected "genze" to "genre"
         params: { q: `${mood} genre:rock`, type: "track", limit: 50 },
       }
     );
@@ -75,8 +74,6 @@ app.get("/playlist", async (req, res) => {
     const playlistWithGenres = await Promise.all(
       randomTracks.map(async (track) => {
         const artistId = track.artists[0].id;
-        
-        // FINAL FIX: Using the real Spotify Artists API endpoint
         const artistResp = await axios.get(
           `https://api.spotify.com/v1/artists/${artistId}`,
           { headers: { Authorization: `Bearer ${token}` } }
