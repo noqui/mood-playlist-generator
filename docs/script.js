@@ -39,12 +39,11 @@ async function generatePlaylist() {
   
   // Set style to center the loading message vertically.
   playlistContent.style.justifyContent = 'center';
-  playlistContent.innerHTML = `<p>Finding some ${mood.toLowerCase()} tunes for you... </p>`;
+  playlistContent.innerHTML = `<p>Finding some ${mood.toLowerCase()} tunes for you... 🎵</p>`;
 
   try {
     const url = `https://moodify-backend-9a9p.onrender.com/playlist?mood=${encodeURIComponent(mood)}`;
     
-    // FIX: Add { cache: 'no-store' } to force a new result from the server.
     const res = await fetch(url, { cache: 'no-store' });
     const data = await res.json();
 
@@ -57,6 +56,7 @@ async function generatePlaylist() {
         const div = document.createElement("div");
         div.className = 'song-item';
         
+        // UPDATE: Added a paragraph to display the song.genre
         div.innerHTML = `
           <a href="${song.url}" target="_blank">
             <img 
@@ -67,13 +67,14 @@ async function generatePlaylist() {
           </a>
           <div class="song-info">
               <h3>${song.title}</h3>
-              <p>${song.artist}</p>
+              <p class="song-artist">${song.artist}</p>
+              <p class="song-genre">${song.genre}</p>
           </div>
           `;
         playlistContent.appendChild(div);
       });
     } else {
-      playlistContent.innerHTML = "<p>No songs found. Try another mood </p>";
+      playlistContent.innerHTML = "<p>No songs found. Try another mood 🎶</p>";
     }
   } catch (error) {
     console.error("Error fetching playlist:", error);
