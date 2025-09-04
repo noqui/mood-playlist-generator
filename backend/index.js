@@ -53,7 +53,8 @@ app.get("/playlist", async (req, res) => {
       "https://api.spotify.com/v1",
       {
         headers: { Authorization: `Bearer ${token}` },
-        params: { q: `${mood} genre:rock`, type: "track", limit: 50 },
+        // REVERTED: Removed "genre:rock" to restore working state
+        params: { q: mood, type: "track", limit: 50 },
       }
     );
     
