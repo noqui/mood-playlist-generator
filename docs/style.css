@@ -144,23 +144,20 @@ html, body {
     z-index: 20;
     display: none;
     justify-content: center;
-    /* align-items changed to flex-start for better list view */
     align-items: flex-start; 
     overflow-y: auto;
     box-sizing: border-box;
     padding: 60px 20px 20px 20px;
 }
 
-/* --- UPDATE: Styling for the vertical playlist --- */
 #playlist-content {
     display: flex;
     flex-direction: column;
     gap: 15px;
     width: 100%;
     max-width: 500px;
-    /* --- THIS IS THE FIX --- */
-    /* flex-grow allows this container to fill the vertical space of its parent */
     flex-grow: 1; 
+    justify-content: center;
 }
 
 .song-item {
@@ -185,10 +182,20 @@ html, body {
     font-weight: bold;
 }
 
-.song-info p {
+/* UPDATE: Renamed 'p' to '.song-artist' for clarity */
+.song-info .song-artist {
     margin: 0;
     font-size: 0.9rem;
     opacity: 0.8;
+}
+
+/* NEW: Style for the genre text */
+.song-info .song-genre {
+    margin: 4px 0 0 0;
+    font-size: 0.8rem;
+    font-style: italic;
+    opacity: 0.6;
+    text-transform: capitalize;
 }
 
 #close-results {
