@@ -49,7 +49,10 @@
     <input type="hidden" id="moodInput" />
 
     <div id="results">
-        <button id="close-results" onclick="closeResults()">×</button>
+        <div class="results-controls">
+            <button id="refresh-playlist" onclick="generatePlaylist()">Refresh 🔁</button>
+            <button id="close-results" onclick="closeResults()">×</button>
+        </div>
         <div id="playlist-content"></div>
     </div>
 
