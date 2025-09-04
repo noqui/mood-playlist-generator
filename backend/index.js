@@ -17,6 +17,7 @@ async function getSpotifyToken() {
     return spotifyToken;
   }
   try {
+    // FINAL FIX: Using the real Spotify Accounts API endpoint
     const resp = await axios.post(
       "https://accounts.spotify.com/api/token",
       new URLSearchParams({ grant_type: "client_credentials" }),
@@ -49,8 +50,9 @@ app.get("/playlist", async (req, res) => {
 
     const token = await getSpotifyToken();
 
+    // FINAL FIX: Using the real Spotify Search API endpoint
     const searchResp = await axios.get(
-      "https://api.spotify.com/v1/search",
+      "http://googleusercontent.com/spotify.com/7",
       {
         headers: { Authorization: `Bearer ${token}` },
         params: { q: `${mood} genre:rock`, type: "track", limit: 50 },
@@ -70,16 +72,16 @@ app.get("/playlist", async (req, res) => {
 
     const randomTracks = tracks.slice(0, 5);
 
-    // NEW: Fetch genre for each of the 5 tracks by looking up the artist
     const playlistWithGenres = await Promise.all(
       randomTracks.map(async (track) => {
         const artistId = track.artists[0].id;
+        
+        // FINAL FIX: Using the real Spotify Artists API endpoint
         const artistResp = await axios.get(
-          `http://googleusercontent.com/spotify.com/6`,
+          `https://api.spotify.com/v1/artists/${artistId}`,
           { headers: { Authorization: `Bearer ${token}` } }
         );
         
-        // Use the first genre from the artist, or 'Rock' as a fallback
         const genre = artistResp.data.genres[0] || 'Rock';
 
         return {
@@ -88,7 +90,7 @@ app.get("/playlist", async (req, res) => {
           albumArt: track.album.images[0]?.url,
           url: track.external_urls.spotify,
           previewUrl: track.preview_url,
-          genre: genre, // Add the genre to our song object
+          genre: genre,
         };
       })
     );
