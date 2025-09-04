@@ -36,7 +36,6 @@ async function getSpotifyToken() {
     return spotifyToken;
   }
   try {
-    // CORRECTED URL: Using the official Spotify Accounts API endpoint
     const resp = await axios.post(
       "https://accounts.spotify.com/api/token",
       new URLSearchParams({ grant_type: "client_credentials" }),
@@ -84,7 +83,6 @@ app.get("/playlist", async (req, res) => {
       ...mapping.features,
     };
     
-    // CORRECTED URL: Using the official Spotify Recommendations API endpoint
     const recommendationsResp = await axios.get(
       "https://api.spotify.com/v1/recommendations",
       {
