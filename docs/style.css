@@ -169,7 +169,7 @@ html, body {
     display: flex;
     align-items: center;
     gap: 20px;
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(92, 92, 92, 0.1);
     padding: 10px;
     border-radius: 8px;
     width: 100%;
@@ -193,7 +193,6 @@ html, body {
     opacity: 0.8;
 }
 
-
 /* --- UPDATE: Styles for new buttons --- */
 .results-controls {
     position: absolute;
@@ -205,7 +204,7 @@ html, body {
 
 #close-results, #refresh-playlist {
     background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    border: 0px solid rgba(255, 255, 255, 0.2);
     color: white;
     cursor: pointer;
     border-radius: 8px;
