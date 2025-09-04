@@ -34,29 +34,42 @@ async function generatePlaylist() {
 
   if (!mood) return;
 
-  // Show the overlay with a loading message
+  // Show the overlay
   showResults();
+  
+  // Set style to center the loading message vertically.
+  playlistContent.style.justifyContent = 'center';
   playlistContent.innerHTML = `<p>Finding some ${mood.toLowerCase()} tunes for you... 🎵</p>`;
 
   try {
-    const res = await fetch(`https://moodify-backend-9a9p.onrender.com/playlist?mood=${encodeURIComponent(mood)}`);
+    const url = `https://moodify-backend-9a9p.onrender.com/playlist?mood=${encodeURIComponent(mood)}`;
+    
+    // FIX: Add { cache: 'no-store' } to force a new result from the server.
+    const res = await fetch(url, { cache: 'no-store' });
     const data = await res.json();
 
-    // Clear the loading message
+    // Reset the justification for the list view and clear the message.
+    playlistContent.style.justifyContent = 'flex-start';
     playlistContent.innerHTML = "";
 
     if (data.playlist && data.playlist.length > 0) {
       data.playlist.forEach((song) => {
         const div = document.createElement("div");
+        div.className = 'song-item';
+        
         div.innerHTML = `
-          <h3>${song.title} - ${song.artist}</h3>
           <a href="${song.url}" target="_blank">
             <img 
               src="${song.albumArt}" 
               alt="${song.title}" 
-              width="200" 
-              style="border-radius:12px;" />
-          </a>`;
+              width="100" 
+              style="border-radius:8px; display: block;" />
+          </a>
+          <div class="song-info">
+              <h3>${song.title}</h3>
+              <p>${song.artist}</p>
+          </div>
+          `;
         playlistContent.appendChild(div);
       });
     } else {
