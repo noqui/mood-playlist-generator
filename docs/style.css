@@ -70,7 +70,7 @@ html, body {
     font-size: 1rem;
     font-weight: 400;
     text-transform: none;
-    white-space: nowrap;
+    /* REMOVED 'white-space: nowrap;' to allow text to wrap on smaller screens */
     overflow: hidden;
     width: 0;
     border-right: 2px solid transparent;
