@@ -8,7 +8,6 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// --- UPDATED: Restructured for a cleaner API call ---
 const moodMappings = {
   upbeat: {
     genres: ["pop", "dance", "happy", "summer", "party"],
@@ -37,6 +36,7 @@ async function getSpotifyToken() {
     return spotifyToken;
   }
   try {
+    // CORRECTED URL: Using the official Spotify Accounts API endpoint
     const resp = await axios.post(
       "https://accounts.spotify.com/api/token",
       new URLSearchParams({ grant_type: "client_credentials" }),
@@ -76,18 +76,17 @@ app.get("/playlist", async (req, res) => {
 
     const token = await getSpotifyToken();
 
-    // Randomly pick one genre from our list to use as a seed
     const randomGenre = mapping.genres[Math.floor(Math.random() * mapping.genres.length)];
 
-    // --- FIX: Correctly build the parameters object ---
     const params = {
       limit: 5,
       seed_genres: randomGenre,
-      ...mapping.features, // Spread only the audio features
+      ...mapping.features,
     };
     
+    // CORRECTED URL: Using the official Spotify Recommendations API endpoint
     const recommendationsResp = await axios.get(
-      "https://api.spotify.com/v1/search/recommendations",
+      "https://api.spotify.com/v1/recommendations",
       {
         headers: { Authorization: `Bearer ${token}` },
         params: params,
@@ -105,7 +104,6 @@ app.get("/playlist", async (req, res) => {
     res.json({ mood, playlist });
 
   } catch (err) {
-    // Log the actual error from Spotify if it exists
     console.error("Playlist error:", err.response?.data || err.message);
     res.status(500).json({ error: "Failed to fetch playlist" });
   }
