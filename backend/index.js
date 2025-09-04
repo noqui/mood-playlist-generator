@@ -8,6 +8,25 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+const moodMappings = {
+  upbeat: {
+    genres: ["pop", "dance", "happy", "summer", "party"],
+    features: { target_valence: 0.8, target_energy: 0.7 }
+  },
+  energetic: {
+    genres: ["rock", "electronic", "work-out", "techno", "hard-rock"],
+    features: { target_energy: 0.9, target_danceability: 0.8 }
+  },
+  downbeat: {
+    genres: ["sad", "acoustic", "rainy-day", "blues", "folk"],
+    features: { target_valence: 0.2, target_energy: 0.3 }
+  },
+  mellow: {
+    genres: ["chill", "ambient", "jazz", "sleep", "r-n-b"],
+    features: { target_energy: 0.4, target_acousticness: 0.7 }
+  },
+};
+
 let spotifyToken = null;
 let tokenExpiry = 0;
 
@@ -47,53 +66,41 @@ app.get("/playlist", async (req, res) => {
     const { mood } = req.query;
     if (!mood) return res.status(400).json({ error: "Mood is required" });
 
+    const moodKey = mood.toLowerCase();
+    const mapping = moodMappings[moodKey];
+
+    if (!mapping) {
+      return res.status(400).json({ error: "Invalid mood provided" });
+    }
+
     const token = await getSpotifyToken();
 
-    const searchResp = await axios.get(
-      "https://api.spotify.com/v1",
+    const randomGenre = mapping.genres[Math.floor(Math.random() * mapping.genres.length)];
+
+    const params = {
+      limit: 5,
+      seed_genres: randomGenre,
+      ...mapping.features,
+    };
+    
+    const recommendationsResp = await axios.get(
+      "https://api.spotify.com/v1/recommendations",
       {
         headers: { Authorization: `Bearer ${token}` },
-        params: { q: `${mood} genre:rock`, type: "track", limit: 50 },
+        params: params,
       }
     );
     
-    let tracks = searchResp.data.tracks.items;
+    const playlist = recommendationsResp.data.tracks.map((track) => ({
+      title: track.name,
+      artist: track.artists.map((a) => a.name).join(", "),
+      albumArt: track.album.images[0]?.url,
+      url: track.external_urls.spotify,
+      previewUrl: track.preview_url,
+      genre: randomGenre, // Use the randomly selected genre
+    }));
 
-    if (tracks.length === 0) {
-      return res.json({ mood, playlist: [], message: "No songs found" });
-    }
-
-    for (let i = tracks.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [tracks[i], tracks[j]] = [tracks[j], tracks[i]];
-    }
-
-    const randomTracks = tracks.slice(0, 5);
-
-    const playlistWithGenres = await Promise.all(
-      randomTracks.map(async (track) => {
-        const artistId = track.artists[0].id;
-        
-        // FINAL FIX: Added the missing '$' to correctly insert the artist's ID
-        const artistResp = await axios.get(
-          `api.spotify.com`,
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
-        
-        const genre = artistResp.data.genres[0] || 'Rock';
-
-        return {
-          title: track.name,
-          artist: track.artists.map((a) => a.name).join(", "),
-          albumArt: track.album.images[0]?.url,
-          url: track.external_urls.spotify,
-          previewUrl: track.preview_url,
-          genre: genre,
-        };
-      })
-    );
-
-    res.json({ mood, playlist: playlistWithGenres });
+    res.json({ mood, playlist });
 
   } catch (err) {
     console.error("Playlist error:", err.response?.data || err.message);
@@ -110,6 +117,7 @@ app.get("/debug", async (req, res) => {
   });
 });
 
-app.listen(process.env.PORT || 5000, ().=> {
+// FINAL FIX: Removed the extra dot '.' before the arrow '=>'
+app.listen(process.env.PORT || 5000, () => {
   console.log("Server running on port", process.env.PORT || 5000);
 });
