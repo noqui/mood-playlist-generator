@@ -68,7 +68,6 @@ async function generatePlaylist() {
           <div class="song-info">
               <h3>${song.title}</h3>
               <p class="song-artist">${song.artist}</p>
-              <p class="song-genre">${song.genre}</p>
           </div>
           `;
         playlistContent.appendChild(div);
