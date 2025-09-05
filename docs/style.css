@@ -4,6 +4,7 @@ html, body {
     padding: 0;
     width: 100%;
     height: 100%;
+    background-color: #000;
     overflow: hidden; /* Prevent any scrolling */
     font-family: 'Google Sans Flex', sans-serif;
 }
@@ -27,6 +28,8 @@ html, body {
 }
 
 .mood-box {
+    position: relative;
+    overflow: hidden;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -50,10 +53,30 @@ html, body {
     padding: 1rem;
     transform: scale(1);
     transition: transform 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+    position: relative;
+    z-index: 2;
 }
 
 .mood-box:hover div {
     transform: scale(1.15);
+}
+
+.mood-video {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
+    z-index: 1;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+}
+
+.mood-box:hover .mood-video {
+    opacity: 0.2;
 }
 
 .mood-box h3 {
@@ -70,42 +93,28 @@ html, body {
     font-size: 1rem;
     font-weight: 400;
     text-transform: none;
-    white-space: nowrap;
-    overflow: hidden;
-    width: 0;
-    border-right: 2px solid transparent;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+    max-width: 300px;
 }
 
 .mood-box:hover .mood-description {
-    border-right-color: rgba(255, 255, 255, 0.75);
-    animation: typing 1.5s steps(var(--char-count)) forwards, 
-               blink 0.75s infinite step-end;
-    animation-delay: 0.5s;
+    opacity: 0.8;
+    transition-delay: 0.3s;
 }
 
 /* Colors are now applied on hover to text and background */
-#upbeat:hover { background-color: #FFF916; --char-count: 79; }
+#upbeat:hover { background-color: #FFF916; }
 #upbeat:hover h3, #upbeat:hover p { color: #D9006A; }
 
-#energetic:hover { background-color: #FF4E2A; --char-count: 78; }
+#energetic:hover { background-color: #FF4E2A; }
 #energetic:hover h3, #energetic:hover p { color: #290740; }
 
-#downbeat:hover { background-color: #3144B7; --char-count: 68; }
+#downbeat:hover { background-color: #3144B7; }
 #downbeat:hover h3, #downbeat:hover p { color: #9CF0E1; }
 
-#mellow:hover { background-color: #8BF677; --char-count: 77; }
+#mellow:hover { background-color: #8BF677; }
 #mellow:hover h3, #mellow:hover p { color: #7F14FF; }
-
-/* Keyframe animations for the typewriter effect */
-@keyframes typing {
-    from { width: 0; }
-    to { width: 100%; }
-}
-
-@keyframes blink {
-    from, to { border-right-color: transparent; }
-    50% { border-right-color: rgba(255, 255, 255, 0.75); }
-}
 
 /* Center prompt stays on top of the grid */
 .center-prompt {
@@ -119,7 +128,6 @@ html, body {
     z-index: 10;
     pointer-events: none;
     color: #333;
-    /* --- NEW: Purple glow effect --- */
     box-shadow: 0 0 25px 4px rgba(255, 255, 255, 0.2);
 }
 
@@ -146,23 +154,20 @@ html, body {
     z-index: 20;
     display: none;
     justify-content: center;
-    /* align-items changed to flex-start for better list view */
     align-items: flex-start; 
     overflow-y: auto;
     box-sizing: border-box;
     padding: 60px 20px 20px 20px;
 }
 
-/* --- UPDATE: Styling for the vertical playlist --- */
 #playlist-content {
     display: flex;
     flex-direction: column;
     gap: 15px;
     width: 100%;
     max-width: 500px;
-    /* --- THIS IS THE FIX --- */
-    /* flex-grow allows this container to fill the vertical space of its parent */
     flex-grow: 1; 
+    justify-content: flex-start;
 }
 
 .song-item {
@@ -193,7 +198,6 @@ html, body {
     opacity: 0.8;
 }
 
-/* --- UPDATE: Styles for new buttons --- */
 .results-controls {
     position: absolute;
     top: 20px;
@@ -202,29 +206,76 @@ html, body {
     gap: 10px;
 }
 
-#close-results, #refresh-playlist {
+.results-controls button {
     background: rgba(255, 255, 255, 0.1);
-    border: 0px solid rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.2);
     color: white;
     cursor: pointer;
-    border-radius: 8px;
-    transition: background-color 0.2s;
+    border-radius: 50%;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background-color 0.2s, transform 0.2s;
+    padding: 0;
 }
 
-#close-results:hover, #refresh-playlist:hover {
+.results-controls button:hover {
     background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.1);
 }
 
-#close-results {
-    font-size: 1.5rem;
-    font-weight: 300;
-    line-height: 1;
-    width: 40px;
-    height: 40px;
+.material-symbols-outlined {
+    font-size: 28px;
 }
 
-#refresh-playlist {
-    font-size: 0.9rem;
-    padding: 0 15px;
-    height: 40px;
+
+/* --- Responsive Styles --- */
+@media (max-width: 768px) {
+    /* --- THIS IS THE FIX --- */
+    /* Allow scrolling on the main page for the vertical layout */
+    html, body {
+        overflow: auto;
+        height: auto; 
+    }
+
+    .mood-container {
+        position: relative; /* Change from fixed to allow scrolling */
+    }
+
+    /* Stack the grid into a single column */
+    .mood-grid {
+        grid-template-columns: 1fr;
+        grid-template-rows: repeat(4, 50vh); /* Give each box a portion of the screen height */
+    }
+
+    /* Adjust text sizes for mobile */
+    .mood-box h3 {
+        font-size: 1.5rem;
+    }
+
+    .mood-description {
+        font-size: 0.9rem;
+    }
+
+    /* Make the center prompt smaller and position it within the flow */
+    .center-prompt {
+        position: relative; /* Un-stick it from the center */
+        transform: none;
+        top: auto;
+        left: auto;
+        width: 80%;
+        margin: 40px auto; /* Center it with space */
+        z-index: 5;
+    }
+    
+    .center-prompt h2 {
+        font-size: 1.1rem;
+    }
+
+    /* Ensure the results overlay still covers the screen */
+    #results {
+        position: fixed;
+    }
 }
