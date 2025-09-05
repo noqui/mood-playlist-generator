@@ -1,4 +1,4 @@
-# Moodify 🎵
+# Moodify
 Generate AI-powered playlists from your mood.
 
 ## 🚀 Quick Start
