@@ -43,9 +43,29 @@ html, body {
     text-shadow: none; 
 }
 
+/* --- NEW: Add a pseudo-element for the background image --- */
+.mood-box::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    z-index: 1;
+    opacity: 0; /* Hidden by default */
+    transition: opacity 0.5s ease-in-out;
+}
+
 .mood-box:hover {
     z-index: 2;
     filter: brightness(1.1);
+}
+
+/* --- NEW: Fade in the background image on hover --- */
+.mood-box:hover::before {
+    opacity: 0.2; /* Low opacity on hover */
 }
 
 .mood-box div {
@@ -54,30 +74,14 @@ html, body {
     transform: scale(1);
     transition: transform 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
     position: relative;
-    z-index: 2;
+    z-index: 2; /* Ensures text is above the image */
 }
 
 .mood-box:hover div {
     transform: scale(1.15);
 }
 
-.mood-video {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    min-width: 100%;
-    min-height: 100%;
-    width: auto;
-    height: auto;
-    z-index: 1;
-    opacity: 0;
-    transition: opacity 0.5s ease-in-out;
-}
-
-.mood-box:hover .mood-video {
-    opacity: 0.2;
-}
+/* --- REMOVED .mood-video styles --- */
 
 .mood-box h3 {
     margin: 0 0 0.5rem 0;
@@ -103,18 +107,22 @@ html, body {
     transition-delay: 0.3s;
 }
 
-/* Colors are now applied on hover to text and background */
+/* Colors and background images are now applied on hover */
 #upbeat:hover { background-color: #FFF916; }
 #upbeat:hover h3, #upbeat:hover p { color: #D9006A; }
+#upbeat::before { background-image: url('images/upbeat.png'); }
 
 #energetic:hover { background-color: #FF4E2A; }
 #energetic:hover h3, #energetic:hover p { color: #290740; }
+#energetic::before { background-image: url('images/energetic.png'); }
 
 #downbeat:hover { background-color: #3144B7; }
 #downbeat:hover h3, #downbeat:hover p { color: #9CF0E1; }
+#downbeat::before { background-image: url('images/downbeat.png'); }
 
 #mellow:hover { background-color: #8BF677; }
 #mellow:hover h3, #mellow:hover p { color: #7F14FF; }
+#mellow::before { background-image: url('images/mellow.png'); }
 
 /* Center prompt stays on top of the grid */
 .center-prompt {
@@ -230,27 +238,22 @@ html, body {
     font-size: 28px;
 }
 
-
 /* --- Responsive Styles --- */
 @media (max-width: 768px) {
-    /* --- THIS IS THE FIX --- */
-    /* Allow scrolling on the main page for the vertical layout */
     html, body {
         overflow: auto;
         height: auto; 
     }
 
     .mood-container {
-        position: relative; /* Change from fixed to allow scrolling */
+        position: relative;
     }
 
-    /* Stack the grid into a single column */
     .mood-grid {
         grid-template-columns: 1fr;
-        grid-template-rows: repeat(4, 50vh); /* Give each box a portion of the screen height */
+        grid-template-rows: repeat(4, 50vh);
     }
 
-    /* Adjust text sizes for mobile */
     .mood-box h3 {
         font-size: 1.5rem;
     }
@@ -259,22 +262,20 @@ html, body {
         font-size: 0.9rem;
     }
 
-    /* Make the center prompt smaller and position it within the flow */
     .center-prompt {
-        position: relative; /* Un-stick it from the center */
+        position: sticky;
+        top: 20px;
         transform: none;
-        top: auto;
         left: auto;
         width: 80%;
-        margin: 40px auto; /* Center it with space */
-        z-index: 5;
+        margin: 40px auto;
+        z-index: 15;
     }
     
     .center-prompt h2 {
         font-size: 1.1rem;
     }
 
-    /* Ensure the results overlay still covers the screen */
     #results {
         position: fixed;
     }
