@@ -3,43 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Moodify 🎵</title>
+    <title>Moodify</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
-
     <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-    <div class="mood-container">
-        <div class="center-prompt">
-            <h2>What is your mood?</h2>
+    <div class="center-prompt">
+        <h2>What is your mood?</h2>
+                <div class="info-container">
+            <span class="material-symbols-outlined">info</span>
+            <span class="tooltip-text">
+                Moodify is a minimalist web app that translates a user's feeling into a curated Spotify playlist. It was built as a portfolio project to explore "vibe coding"—the process of turning an abstract concept like a mood into a functional, aesthetic, and AI-driven digital experience.
+            </span>
         </div>
+    </div>
 
+    <div class="mood-container">
         <div class="mood-grid">
             <div class="mood-box" id="upbeat" onclick="selectMood('Upbeat')">
+                <div class="bg-image"></div>
                 <div>
                     <h3>Upbeat</h3>
                     <p class="mood-description">The official soundtrack for when your dog is the only one watching you dance.</p>
                 </div>
             </div>
             <div class="mood-box" id="energetic" onclick="selectMood('Energetic')">
+                <div class="bg-image"></div>
                 <div>
                     <h3>Energetic</h3>
                     <p class="mood-description">The musical equivalent of three espresso shots and a questionable life choice.</p>
                 </div>
             </div>
             <div class="mood-box" id="downbeat" onclick="selectMood('Downbeat')">
+                <div class="bg-image"></div>
                 <div>
                     <h3>Downbeat</h3>
                     <p class="mood-description">For dramatically staring out a rainy window, even when it's sunny.</p>
                 </div>
             </div>
             <div class="mood-box" id="mellow" onclick="selectMood('Mellow')">
+                <div class="bg-image"></div>
                 <div>
                     <h3>Mellow</h3>
                     <p class="mood-description">Guaranteed to lower your heart rate and your motivation to do the dishes.</p>
