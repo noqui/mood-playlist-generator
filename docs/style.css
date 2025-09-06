@@ -43,7 +43,6 @@ html, body {
     text-shadow: none; 
 }
 
-/* --- NEW: Add a pseudo-element for the background image --- */
 .mood-box::before {
     content: '';
     position: absolute;
@@ -54,7 +53,7 @@ html, body {
     background-size: cover;
     background-position: center;
     z-index: 1;
-    opacity: 0; /* Hidden by default */
+    opacity: 0;
     transition: opacity 0.5s ease-in-out;
 }
 
@@ -63,9 +62,8 @@ html, body {
     filter: brightness(1.1);
 }
 
-/* --- NEW: Fade in the background image on hover --- */
 .mood-box:hover::before {
-    opacity: 0.2; /* Low opacity on hover */
+    opacity: 0.2;
 }
 
 .mood-box div {
@@ -74,14 +72,12 @@ html, body {
     transform: scale(1);
     transition: transform 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
     position: relative;
-    z-index: 2; /* Ensures text is above the image */
+    z-index: 2;
 }
 
 .mood-box:hover div {
     transform: scale(1.15);
 }
-
-/* --- REMOVED .mood-video styles --- */
 
 .mood-box h3 {
     margin: 0 0 0.5rem 0;
@@ -136,9 +132,10 @@ html, body {
     z-index: 10;
     pointer-events: none;
     color: #333;
-    box-shadow: 0 0 25px 4px rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    gap: 12px;
 }
-
 .center-prompt h2 {
     margin: 0;
     font-size: 1.3rem;
@@ -238,6 +235,55 @@ html, body {
     font-size: 28px;
 }
 
+.info-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    pointer-events: auto;
+    cursor: help;
+}
+
+.info-container .material-symbols-outlined {
+    font-size: 1.6rem;
+    color: #888;
+    transition: color 0.3s;
+}
+
+.info-container:hover .material-symbols-outlined {
+    color: #FFF;
+}
+
+.tooltip-text {
+    visibility: hidden;
+    opacity: 0;
+    width: 450px;
+    background: #000;
+    border: 1px solid #FFF;
+    color: #ffffff;
+    text-align: center;
+    border-radius: 0px;
+    padding: 24px;
+    position: absolute;
+    z-index: 1;
+    bottom: 160%; /* Position above the icon on DESKTOP */
+    left: 50%;
+    transform: translateX(-50%);
+    transition: opacity 0.3s ease;
+    font-size: 0.9rem;
+    font-weight: 400;
+    line-height: 1.5;
+    text-transform: none;
+    white-space: normal;
+}
+
+/* --- REMOVED: The little arrow below the tooltip --- */
+/* .tooltip-text::after { ... } */
+
+.info-container:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+}
+
 /* --- Responsive Styles --- */
 @media (max-width: 768px) {
     html, body {
@@ -278,5 +324,13 @@ html, body {
 
     #results {
         position: fixed;
+    }
+
+    /* --- NEW: Reposition tooltip on mobile --- */
+    .tooltip-text {
+        bottom: auto; /* Unset the desktop 'bottom' position */
+        top: 150%; /* Position it below the icon */
+        width: 90vw; /* Make it take up most of the screen width */
+        max-width: 400px; /* But not more than 400px */
     }
 }
